@@ -12,11 +12,16 @@
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
+        
         GameManager* gm = [GameManager new];
+//        NSTimer *timer = gm.getTimer;
         
         NSLog(@"\n◆Command\nJ : Left\nK : Right\nC : Rotate\nD : Drop");
+        
         while(1) {
+            
             [gm displayCondition];
+//            [[NSRunLoop currentRunLoop] run];
             
             NSString* input = InputHandler.getString;
             if ([input isEqualToString:@"j"]) {

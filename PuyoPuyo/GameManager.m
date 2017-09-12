@@ -9,6 +9,12 @@
 #import "GameManager.h"
 #import "Puyo.h"
 
+@interface GameManager() {
+    NSTimer *timer;
+    NSInteger count;
+}
+
+@end
 NSInteger const MAX_X = 6;
 NSInteger const SELECT_MAX_Y = 3;
 NSInteger const MAIN_MAX_Y = 10;
@@ -47,6 +53,9 @@ NSString * const empty = @"▫️";
         for(int i = 0; i < MAIN_MAX_Y; i++){
             [_mainAreaPositions addObject:[NSMutableArray arrayWithObjects:empty,empty, empty, empty, empty ,empty,nil]];
         }
+        
+        //For timer
+        [self setTimer];
     }
     return self;
 }
@@ -81,6 +90,24 @@ NSString * const empty = @"▫️";
     } else if ([command isEqualToString:@"drop"]){
         
     }
+}
+
+- (void)setTimer {
+    timer = [NSTimer scheduledTimerWithTimeInterval:1
+                                              target:self
+                                            selector:@selector(repeateMethod:)
+                                            userInfo:nil
+                                             repeats:YES];
+    count = 0;
+}
+
+
+- (void)displayMain {
+    [self repeateMethod:timer];
+}
+- (void)repeateMethod:(NSTimer *)timer{
+    count += 1;
+    NSLog(@"Hoge");
 }
 
 
