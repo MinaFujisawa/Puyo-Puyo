@@ -31,6 +31,7 @@ int main(int argc, const char * argv[]) {
             } else if ([input isEqualToString:@"c"]) {
                 [gm move:@"rotate"];
             } else if ([input isEqualToString:@"d"]) {
+                [gm move:@"drop"];
             }else{
                 printf("not valid");
             }

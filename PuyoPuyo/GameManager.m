@@ -15,9 +15,9 @@
 }
 
 @end
-NSInteger const MAX_X = 6;
-NSInteger const SELECT_MAX_Y = 3;
-NSInteger const MAIN_MAX_Y = 10;
+NSInteger const MAX_COL = 6;
+NSInteger const SELECT_MAX_ROW = 3;
+NSInteger const MAIN_MAX_ROW = 10;
 
 @implementation GameManager
 NSString * const empty = @"▫️";
@@ -33,15 +33,7 @@ NSString * const empty = @"▫️";
         
         //set first Puyos to selectAreaPositions
         _selectAreaPositions = [NSMutableArray array];
-        NSMutableArray *arrayX = [NSMutableArray array];
-        
-        for(int i = 0; i < MAX_X; i++){
-            [arrayX addObject:(empty)];
-        }
-        for(int i = 0; i < SELECT_MAX_Y; i++){
-            //            [_selectAreaPositions addObject:arrayX]; //why not workin?
-            [_selectAreaPositions addObject:[NSMutableArray arrayWithObjects:empty,empty, empty, empty, empty ,empty,nil]];
-        }
+        [self resetSelectArea];
         
         [_curPuyo1 setCurrentPlace:@"0 2"];
         [_curPuyo2 setCurrentPlace:@"1 2"];
@@ -50,7 +42,7 @@ NSString * const empty = @"▫️";
         
         //set mainAreaPositions
         _mainAreaPositions = [NSMutableArray array];
-        for(int i = 0; i < MAIN_MAX_Y; i++){
+        for(int i = 0; i < MAIN_MAX_ROW; i++){
             [_mainAreaPositions addObject:[NSMutableArray arrayWithObjects:empty,empty, empty, empty, empty ,empty,nil]];
         }
         
@@ -63,41 +55,82 @@ NSString * const empty = @"▫️";
 - (void) move : (NSString*) command {
     //Get current place
     NSArray *place1 = [self.curPuyo1.currentPlace componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    NSInteger x1 = [[place1 objectAtIndex:0] intValue];
-    NSInteger y1 = [[place1 objectAtIndex:1] intValue];
+    NSInteger p1row = [[place1 objectAtIndex:0] intValue];
+    NSInteger p1col = [[place1 objectAtIndex:1] intValue];
+    NSLog(@"1 : p1x:%ld p1y:%ld", p1row, p1col);
     
     NSArray *place2 = [self.curPuyo2.currentPlace componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    NSInteger x2 = [[place2 objectAtIndex:0] intValue];
-    NSInteger y2 = [[place2 objectAtIndex:1] intValue];
+    NSInteger p2row = [[place2 objectAtIndex:0] intValue];
+    NSInteger p2col = [[place2 objectAtIndex:1] intValue];
+    NSLog(@"2 : p2x:%ld p2y:%ld", p2row, p2col);
     
     //Move
     if ([command isEqualToString:@"right"]) {
-        self.selectAreaPositions[x1][y1 + 1] = [NSString stringWithFormat:@"%@", self.curPuyo1.color];
-        self.selectAreaPositions[x2][y2 + 1] = [NSString stringWithFormat:@"%@", self.curPuyo2.color];
-        [self.curPuyo1 setCurrentPlace:[NSString stringWithFormat:@"%ld %ld", x1, y1 + 1]];
-        [self.curPuyo2 setCurrentPlace:[NSString stringWithFormat:@"%ld %ld", x2, y2 + 1]];
-        [self remove:x1 :y1];
-        [self remove:x2 :y2];
+        self.selectAreaPositions[p1row][p1col + 1] = [NSString stringWithFormat:@"%@", self.curPuyo1.color];
+        self.selectAreaPositions[p2row][p2col + 1] = [NSString stringWithFormat:@"%@", self.curPuyo2.color];
+        [self.curPuyo1 setCurrentPlace:[NSString stringWithFormat:@"%ld %ld", p1row, p1col + 1]];
+        [self.curPuyo2 setCurrentPlace:[NSString stringWithFormat:@"%ld %ld", p2row, p2col + 1]];
+        [self remove:p1row :p1col];
+        [self remove:p2row :p2col];
         
     } else if ([command isEqualToString:@"left"]){
-        self.selectAreaPositions[x1][y1 - 1] = [NSString stringWithFormat:@"%@", self.curPuyo1.color];
-        self.selectAreaPositions[x2][y2 - 1] = [NSString stringWithFormat:@"%@", self.curPuyo2.color];
-        [self.curPuyo1 setCurrentPlace:[NSString stringWithFormat:@"%ld %ld", x1, y1 - 1]];
-        [self.curPuyo2 setCurrentPlace:[NSString stringWithFormat:@"%ld %ld", x2, y2 - 1]];
-        [self remove:x1 :y1];
-        [self remove:x2 :y2];
+        self.selectAreaPositions[p1row][p1col - 1] = [NSString stringWithFormat:@"%@", self.curPuyo1.color];
+        self.selectAreaPositions[p2row][p2col - 1] = [NSString stringWithFormat:@"%@", self.curPuyo2.color];
+        [self.curPuyo1 setCurrentPlace:[NSString stringWithFormat:@"%ld %ld", p1row, p1col - 1]];
+        [self.curPuyo2 setCurrentPlace:[NSString stringWithFormat:@"%ld %ld", p2row, p2col - 1]];
+        [self remove:p1row :p1col];
+        [self remove:p2row :p2col];
         
     } else if ([command isEqualToString:@"drop"]){
-        
+        [self dropPear:p1row :p1col :p2row :p2col];
+        [self newTern];
+    }
+}
+
+- (void) dropPear : (NSInteger) p1row : (NSInteger) p1col : (NSInteger) p2row : (NSInteger) p2col {
+    NSInteger priority;
+    (p1row > p2row) ? (priority = 1) : (priority = 2);
+    
+    if(priority == 1){
+        [self drop:p1col :1];
+        [self drop:p2col :2];
+    } else if (priority == 2){
+        [self drop:p2col :2];
+        [self drop:p1col :1];
+    }
+    [self resetSelectArea];
+}
+
+- (void) drop : (NSInteger) col : (NSInteger) puyoIndex{
+    Puyo *puyo;
+    (puyoIndex == 1) ? (puyo = self.curPuyo1) : (puyo = self.curPuyo2);
+    for(int i = MAIN_MAX_ROW-1; i > 0; i--){
+        if([self.mainAreaPositions[i][col] isEqualToString:empty]){
+            self.mainAreaPositions[i][col] = puyo.color;
+            break;
+        }
+    }
+}
+
+- (void) resetSelectArea {
+    [self.selectAreaPositions removeAllObjects];
+//    NSMutableArray *arrayX = [NSMutableArray array];
+//    
+//    for(int i = 0; i < MAX_X; i++){
+//        [arrayX addObject:(empty)];
+//    }
+    for(int i = 0; i < SELECT_MAX_ROW; i++){
+        //            [_selectAreaPositions addObject:arrayX]; //why not workin?
+        [self.selectAreaPositions addObject:[NSMutableArray arrayWithObjects:empty,empty, empty, empty, empty ,empty,nil]];
     }
 }
 
 - (void)setTimer {
     timer = [NSTimer scheduledTimerWithTimeInterval:1
-                                              target:self
-                                            selector:@selector(repeateMethod:)
-                                            userInfo:nil
-                                             repeats:YES];
+                                             target:self
+                                           selector:@selector(repeateMethod:)
+                                           userInfo:nil
+                                            repeats:YES];
     count = 0;
 }
 
