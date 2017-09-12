@@ -14,9 +14,9 @@ int main(int argc, const char * argv[]) {
     @autoreleasepool {
         GameManager* gm = [GameManager new];
         
-        NSLog(@"\n◆Command\nJ : Left\nK : Right\nC : Rotate\nEnter : Conform");
+        NSLog(@"\n◆Command\nJ : Left\nK : Right\nC : Rotate\nD : Drop");
         while(1) {
-            [gm displaySelect];
+            [gm displayCondition];
             
             NSString* input = InputHandler.getString;
             if ([input isEqualToString:@"j"]) {
@@ -25,7 +25,8 @@ int main(int argc, const char * argv[]) {
                 [gm move:@"right"];
             } else if ([input isEqualToString:@"c"]) {
                 [gm move:@"rotate"];
-            } else{
+            } else if ([input isEqualToString:@"d"]) {
+            }else{
                 printf("not valid");
             }
         }

@@ -26,6 +26,6 @@
 
 @property NSMutableArray* mainAreaPositions;
 - (void) move : (NSString*) command;
-- (void) displaySelect;
+- (void) displayCondition;
 
 @end

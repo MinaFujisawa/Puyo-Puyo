@@ -11,7 +11,7 @@
 
 NSInteger const MAX_X = 6;
 NSInteger const SELECT_MAX_Y = 3;
-NSInteger const MAIN_MAX_Y = 12;
+NSInteger const MAIN_MAX_Y = 10;
 
 @implementation GameManager
 NSString * const empty = @"▫️";
@@ -41,6 +41,12 @@ NSString * const empty = @"▫️";
         [_curPuyo2 setCurrentPlace:@"1 2"];
         self.selectAreaPositions[0][2] = [NSString stringWithFormat:@"%@", _curPuyo1.color];
         self.selectAreaPositions[1][2] = [NSString stringWithFormat:@"%@", _curPuyo2.color];
+        
+        //set mainAreaPositions
+        _mainAreaPositions = [NSMutableArray array];
+        for(int i = 0; i < MAIN_MAX_Y; i++){
+            [_mainAreaPositions addObject:[NSMutableArray arrayWithObjects:empty,empty, empty, empty, empty ,empty,nil]];
+        }
     }
     return self;
 }
@@ -71,22 +77,42 @@ NSString * const empty = @"▫️";
         [self.curPuyo2 setCurrentPlace:[NSString stringWithFormat:@"%ld %ld", x2, y2 - 1]];
         [self remove:x1 :y1];
         [self remove:x2 :y2];
+        
+    } else if ([command isEqualToString:@"drop"]){
+        
     }
 }
+
+
 - (void) remove : (NSInteger)x : (NSInteger)y {
     self.selectAreaPositions[x][y] = empty;
 }
 - (void) newTern {
     
 }
-- (void) displaySelect {
-    for(NSArray *arX in self.selectAreaPositions){
+- (void) displayCondition {
+    printf("\nーーーーーーーーー");
+    [self displayArray:0]; //select area
+    printf("\n===============");
+    [self displayArray:1]; //main area
+    printf("\nーーーーーーーーー");
+    
+}
+
+- (void) displayArray : (NSInteger) areaType {
+    NSMutableArray *array;
+    if(areaType == 0){
+        array = self.selectAreaPositions;
+    } else if(areaType == 1){
+        array = self.mainAreaPositions;
+    }
+    
+    for(NSArray *arX in array){
         printf("\n|");
         for(NSString *puyoString in arX){
             printf("%s", [puyoString UTF8String]);
         }
         printf("|");
     }
-    printf("\n===============\n");
 }
 @end
