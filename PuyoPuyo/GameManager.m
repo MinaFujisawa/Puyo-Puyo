@@ -78,6 +78,7 @@ NSString * const empty = @"▫️";
     
     else if ([command isEqualToString:@"drop"]){
         [self dropPear:p1row :p1col :p2row :p2col];
+        [self checkMatchWithRow:p1row col:p1col exception:@""];
         [self newTern];
     }
 }
@@ -144,6 +145,33 @@ NSString * const empty = @"▫️";
             self.mainAreaPositions[i][col] = puyo.color;
             break;
         }
+    }
+}
+
+- (void) checkMatchWithRow : (NSInteger)row col:(NSInteger)col exception:(NSString*) exception {
+    NSInteger matchCount = 0;
+    NSString* currentPuyo = self.mainAreaPositions[row][col];
+    NSMutableArray *removeList = [NSMutableArray array];
+    
+//    if([self.mainAreaPositions[row-1][col] isEqualToString:currentPuyo]){
+//        if(![exception isEqualToString:@"top"]){
+//            NSLog(@"TOP same");
+//            matchCount += 1;
+//            [removeList addObject:[NSString stringWithFormat:@"%ld %ld", row-1, col]];
+//            [self checkMatchWithRow:row-1 col:col exception:@"bottom"];
+//        }
+//    }
+//    else if([self.mainAreaPositions[row][col+1] isEqualToString:currentPuyo]){
+//        if(![exception isEqualToString:@"right"]){
+//            NSLog(@"RIGHT same");
+//            matchCount += 1;
+//            [removeList addObject:[NSString stringWithFormat:@"%ld %ld", row, col+1]];
+//            [self checkMatchWithRow:row col:col+1 exception:@"left"];
+//        }
+//    }
+    
+    for (NSString *puyo in removeList) {
+        NSLog(@"%@", puyo);
     }
 }
 
