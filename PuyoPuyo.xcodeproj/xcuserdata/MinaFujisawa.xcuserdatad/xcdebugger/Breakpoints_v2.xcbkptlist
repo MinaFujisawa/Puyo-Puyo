@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PuyoPuyo/GameManager.m"
-            timestampString = "526881074.787953"
+            timestampString = "526926070.62292"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "127"
-            endingLineNumber = "127"
+            startingLineNumber = "139"
+            endingLineNumber = "139"
             landmarkName = "-setTimer"
             landmarkType = "7">
          </BreakpointContent>

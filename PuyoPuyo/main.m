@@ -16,7 +16,7 @@ int main(int argc, const char * argv[]) {
         GameManager* gm = [GameManager new];
 //        NSTimer *timer = gm.getTimer;
         
-        NSLog(@"\n◆Command\nJ : Left\nK : Right\nC : Rotate\nD : Drop");
+        NSLog(@"\n◆Command | J - Left | K - Right | C - Rotate | D - Drop\n");
         
         while(1) {
             

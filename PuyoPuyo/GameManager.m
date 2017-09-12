@@ -17,7 +17,7 @@
 @end
 NSInteger const MAX_COL = 6;
 NSInteger const SELECT_MAX_ROW = 3;
-NSInteger const MAIN_MAX_ROW = 10;
+NSInteger const MAIN_MAX_ROW = 5;
 
 @implementation GameManager
 NSString * const empty = @"▫️";
@@ -33,12 +33,7 @@ NSString * const empty = @"▫️";
         
         //set first Puyos to selectAreaPositions
         _selectAreaPositions = [NSMutableArray array];
-        [self resetSelectArea];
-        
-        [_curPuyo1 setCurrentPlace:@"0 2"];
-        [_curPuyo2 setCurrentPlace:@"1 2"];
-        self.selectAreaPositions[0][2] = [NSString stringWithFormat:@"%@", _curPuyo1.color];
-        self.selectAreaPositions[1][2] = [NSString stringWithFormat:@"%@", _curPuyo2.color];
+        [self placeSelectAreaPuyo];
         
         //set mainAreaPositions
         _mainAreaPositions = [NSMutableArray array];
@@ -57,29 +52,27 @@ NSString * const empty = @"▫️";
     NSArray *place1 = [self.curPuyo1.currentPlace componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSInteger p1row = [[place1 objectAtIndex:0] intValue];
     NSInteger p1col = [[place1 objectAtIndex:1] intValue];
-    NSLog(@"1 : p1x:%ld p1y:%ld", p1row, p1col);
     
     NSArray *place2 = [self.curPuyo2.currentPlace componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSInteger p2row = [[place2 objectAtIndex:0] intValue];
     NSInteger p2col = [[place2 objectAtIndex:1] intValue];
-    NSLog(@"2 : p2x:%ld p2y:%ld", p2row, p2col);
     
     //Move
     if ([command isEqualToString:@"right"]) {
+        [self remove:p1row :p1col];
+        [self remove:p2row :p2col];
         self.selectAreaPositions[p1row][p1col + 1] = [NSString stringWithFormat:@"%@", self.curPuyo1.color];
         self.selectAreaPositions[p2row][p2col + 1] = [NSString stringWithFormat:@"%@", self.curPuyo2.color];
         [self.curPuyo1 setCurrentPlace:[NSString stringWithFormat:@"%ld %ld", p1row, p1col + 1]];
         [self.curPuyo2 setCurrentPlace:[NSString stringWithFormat:@"%ld %ld", p2row, p2col + 1]];
-        [self remove:p1row :p1col];
-        [self remove:p2row :p2col];
         
     } else if ([command isEqualToString:@"left"]){
+        [self remove:p1row :p1col];
+        [self remove:p2row :p2col];
         self.selectAreaPositions[p1row][p1col - 1] = [NSString stringWithFormat:@"%@", self.curPuyo1.color];
         self.selectAreaPositions[p2row][p2col - 1] = [NSString stringWithFormat:@"%@", self.curPuyo2.color];
         [self.curPuyo1 setCurrentPlace:[NSString stringWithFormat:@"%ld %ld", p1row, p1col - 1]];
         [self.curPuyo2 setCurrentPlace:[NSString stringWithFormat:@"%ld %ld", p2row, p2col - 1]];
-        [self remove:p1row :p1col];
-        [self remove:p2row :p2col];
         
     } else if ([command isEqualToString:@"drop"]){
         [self dropPear:p1row :p1col :p2row :p2col];
@@ -98,7 +91,6 @@ NSString * const empty = @"▫️";
         [self drop:p2col :2];
         [self drop:p1col :1];
     }
-    [self resetSelectArea];
 }
 
 - (void) drop : (NSInteger) col : (NSInteger) puyoIndex{
@@ -110,6 +102,23 @@ NSString * const empty = @"▫️";
             break;
         }
     }
+}
+
+- (void) newTern {
+    self.curPuyo1 = self.nxtPuyo1;
+    self.curPuyo2 = self.nxtPuyo2;
+    self.nxtPuyo1 = [Puyo new];
+    self.nxtPuyo2 = [Puyo new];
+    [self placeSelectAreaPuyo];
+}
+
+- (void) placeSelectAreaPuyo {
+    [self resetSelectArea];
+    
+    [_curPuyo1 setCurrentPlace:@"0 2"];
+    [_curPuyo2 setCurrentPlace:@"0 3"];
+    self.selectAreaPositions[0][2] = [NSString stringWithFormat:@"%@", _curPuyo1.color];
+    self.selectAreaPositions[0][3] = [NSString stringWithFormat:@"%@", _curPuyo2.color];
 }
 
 - (void) resetSelectArea {
@@ -147,16 +156,19 @@ NSString * const empty = @"▫️";
 - (void) remove : (NSInteger)x : (NSInteger)y {
     self.selectAreaPositions[x][y] = empty;
 }
-- (void) newTern {
-    
-}
+
 - (void) displayCondition {
+    [self displayNext];
     printf("\nーーーーーーーーー");
     [self displayArray:0]; //select area
     printf("\n===============");
     [self displayArray:1]; //main area
     printf("\nーーーーーーーーー");
     
+}
+
+- (void) displayNext {
+    printf("NEXT : %s%s", [self.nxtPuyo1.color UTF8String], [self.nxtPuyo2.color UTF8String]);
 }
 
 - (void) displayArray : (NSInteger) areaType {
