@@ -16,11 +16,11 @@ int main(int argc, const char * argv[]) {
         GameManager* gm = [GameManager new];
 //        NSTimer *timer = gm.getTimer;
         
-        NSLog(@"\n◆Command | J - Left | K - Right | C - Rotate | D - Drop\n");
-        
-        while(1) {
+        NSLog(@"\n◆Command | J - Left | K - Right | L - Rotate | D - Drop\n");
+        [gm displayCondition];
+        while(![gm isGameOver]) {
             
-            [gm displayCondition];
+            
 //            [[NSRunLoop currentRunLoop] run];
             
             NSString* input = InputHandler.getString;
@@ -28,13 +28,15 @@ int main(int argc, const char * argv[]) {
                 [gm move:@"left"];
             } else if ([input isEqualToString:@"k"]) {
                 [gm move:@"right"];
-            } else if ([input isEqualToString:@"c"]) {
+            } else if ([input isEqualToString:@"l"]) {
                 [gm move:@"rotate"];
             } else if ([input isEqualToString:@"d"]) {
                 [gm move:@"drop"];
             }else{
                 printf("not valid");
             }
+            
+            [gm displayCondition];
         }
         
     }
