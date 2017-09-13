@@ -21,7 +21,6 @@ int main(int argc, const char * argv[]) {
         while(![gm isGameOver]) {
             
             
-//            [[NSRunLoop currentRunLoop] run];
             
             NSString* input = InputHandler.getString;
             if ([input isEqualToString:@"j"]) {
@@ -37,6 +36,7 @@ int main(int argc, const char * argv[]) {
             }
             
             [gm displayCondition];
+//            [[NSRunLoop currentRunLoop] run];
         }
         
     }
