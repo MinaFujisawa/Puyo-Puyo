@@ -188,6 +188,7 @@ BOOL hasRemovableMatch = NO;
     }
 }
 
+//MARK:check
 - (void) checkMatchWithRow : (NSInteger)row :(NSInteger)col exception:(NSString*) exception {
     
     NSString* currentPuyo = self.mainAreaPositions[row][col];
@@ -199,7 +200,7 @@ BOOL hasRemovableMatch = NO;
         [matchList addObject:[NSString stringWithFormat:@"%ld %ld", row-1, col]];
         [self checkMatchWithRow:row-1 :col exception:@"bottom"];
     }
-    else if(row != MAIN_MAX_ROW-1){
+    if(row != MAIN_MAX_ROW-1){
         if([self.mainAreaPositions[row+1][col] isEqualToString:currentPuyo]
            && ![exception isEqualToString:@"bottom"]){
             NSLog(@"BOTTOM [%ld][%ld]", row+1, col);
@@ -208,7 +209,7 @@ BOOL hasRemovableMatch = NO;
             [self checkMatchWithRow:row+1 :col exception:@"top"];
         }
     }
-    else if(col != MAX_COL-1){
+    if(col != MAX_COL-1){
         if([self.mainAreaPositions[row][col+1] isEqualToString:currentPuyo]
            && ![exception isEqualToString:@"right"]){
             NSLog(@"RIGHT [%ld][%ld]", row, col+1);
@@ -217,7 +218,7 @@ BOOL hasRemovableMatch = NO;
             [self checkMatchWithRow:row :col+1 exception:@"left"];
         }
     }
-    else if(col != 0){
+    if(col != 0){
         if([self.mainAreaPositions[row][col-1] isEqualToString:currentPuyo]
            && ![exception isEqualToString:@"left"]){
             NSLog(@"LEFT [%ld][%ld]", row, col-1);
