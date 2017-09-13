@@ -19,10 +19,11 @@
 @property Puyo* curPuyo2;
 @property Puyo* nxtPuyo1;
 @property Puyo* nxtPuyo2;
-@property (nonatomic)NSMutableArray* selectAreaPositions;
+@property NSMutableArray* selectAreaPositions;
 @property NSMutableArray* mainAreaPositions;
+@property NSMutableSet *matchingList;
+@property NSMutableArray *allMatchingList;
 - (void) move : (NSString*) command;
 - (void) displayCondition;
 - (BOOL) isGameOver;
-
 @end
