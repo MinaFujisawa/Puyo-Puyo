@@ -28,4 +28,5 @@
 - (void) move : (NSString*) command;
 - (void) displayCondition;
 - (BOOL) isGameOver;
+- (void) gameOver;
 @end

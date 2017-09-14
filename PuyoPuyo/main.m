@@ -19,9 +19,6 @@ int main(int argc, const char * argv[]) {
         NSLog(@"\n◆Command | J - Left | K - Right | L - Rotate | D - Drop\n");
         [gm displayCondition];
         while(![gm isGameOver]) {
-            
-            
-            
             NSString* input = InputHandler.getString;
             if ([input isEqualToString:@"j"]) {
                 [gm move:@"left"];
@@ -36,8 +33,9 @@ int main(int argc, const char * argv[]) {
             }
             
             [gm displayCondition];
-//            [[NSRunLoop currentRunLoop] run];
         }
+        [gm gameOver];
+        
         
     }
     

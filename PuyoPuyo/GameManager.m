@@ -34,10 +34,10 @@ NSString *const empty = @"▫️";
         _nxtPuyo2 = [Puyo new];
         
         //For test
-        [_curPuyo1 setColor:@"❤️"];
-        [_curPuyo2 setColor:@"💛"];
-        [_nxtPuyo1 setColor:@"❤️"];
-        [_nxtPuyo2 setColor:@"💛"];
+        //        [_curPuyo1 setColor:@"❤️"];
+        //        [_curPuyo2 setColor:@"💛"];
+        //        [_nxtPuyo1 setColor:@"❤️"];
+        //        [_nxtPuyo2 setColor:@"💛"];
         
         //set first Puyos to selectAreaPositions
         _selectAreaPositions = [NSMutableArray array];
@@ -85,25 +85,28 @@ NSString *const empty = @"▫️";
         [self rotate:p1row :p1col :p2row :p2col];
     }
     
+    //MARK: Drop
     else if ([command isEqualToString:@"drop"]){
         [self dropPear:p1row :p1col :p2row :p2col];
         
         do{
-            //if it has removable matches
+            //for remove match
             for(NSMutableSet *set in self.allMatchingList){
                 if(set.count >= MIN_MATCH){
                     [self displayCondition];
                     [self removeMatch];
+                    [self.allMatchingList removeAllObjects];
+                    [self.matchingList removeAllObjects];
                     break;
                 }
             }
             
             //for combo
-//            [self findFloatingPuyo];
-//            if(self.floatingList.count > 0){
-//                NSLog(@"need drop");
-//                [self dropFroatingPuyo];
-//            }
+            [self findFloatingPuyo];
+            if(self.floatingList.count > 0){
+                [self displayCondition];
+                [self dropFroatingPuyo];
+            }
         } while(self.floatingList.count != 0);
         
         [self newTern];
@@ -172,13 +175,8 @@ NSString *const empty = @"▫️";
             self.mainAreaPositions[row][col] = puyo.color;
             
             self.matchingList = [NSMutableSet set];
-            [self checkMatchWithRow:row :col exception:@""];
+            [self checkMatchWithRow:row :col];
             [self.allMatchingList addObject:self.matchingList];
-            
-            NSLog(@"match count %ld", self.matchingList.count);
-            for (NSString *place in self.matchingList) {
-                NSLog(@"%@", place);
-            }
             break;
         }
     }
@@ -188,26 +186,24 @@ NSString *const empty = @"▫️";
     //NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"intValue" ascending:YES];
     //[self.floatingList sortedArrayUsingDescriptors:@[sortDescriptor]];
     for(NSString *place in self.floatingList){
-        NSLog(@"%@", place);
         NSArray *placeArray = [place componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         NSInteger row = [placeArray[0] integerValue];
         NSInteger col = [placeArray[1] integerValue];
         NSInteger newRow;
         for(newRow = MAIN_MAX_ROW-1; newRow >= 0; newRow--){
             if([self.mainAreaPositions[newRow][col] isEqualToString:empty]){
-                NSLog(@"newRow %ld", newRow);
-                
                 self.mainAreaPositions[newRow][col] = self.mainAreaPositions[row][col];
                 
                 self.matchingList = [NSMutableSet set];
-                [self checkMatchWithRow:newRow :col exception:@""];
+                self.mainAreaPositions[row][col] = empty;
+                [self checkMatchWithRow:newRow :col];
                 [self.allMatchingList addObject:self.matchingList];
                 
-                self.mainAreaPositions[row][col] = empty;
                 break;
             }
         }
     }
+    [NSThread sleepForTimeInterval:1];
 }
 
 - (void) findFloatingPuyo {
@@ -240,42 +236,48 @@ NSString *const empty = @"▫️";
 
 
 //MARK:check matches
-- (void) checkMatchWithRow : (NSInteger)row :(NSInteger)col exception:(NSString*) exception {
+- (void) checkMatchWithRow : (NSInteger)row :(NSInteger)col {
     
     NSString* currentPuyo = self.mainAreaPositions[row][col];
     
-    if([self.mainAreaPositions[row-1][col] isEqualToString:currentPuyo]
-       && ![exception isEqualToString:@"top"]){
-        NSLog(@"TOP [%ld][%ld]", row-1, col);
-        [self.matchingList addObject:[NSString stringWithFormat:@"%ld %ld", row, col]];
-        [self.matchingList addObject:[NSString stringWithFormat:@"%ld %ld", row-1, col]];
-        [self checkMatchWithRow:row-1 :col exception:@"bottom"];
+    if(row != 0){
+        if([self.mainAreaPositions[row-1][col] isEqualToString:currentPuyo]){
+            //        NSLog(@"TOP [%ld][%ld]", row-1, col);
+            if(![self.matchingList containsObject:[NSString stringWithFormat:@"%ld %ld", row-1, col]]){
+                [self.matchingList addObject:[NSString stringWithFormat:@"%ld %ld", row, col]];
+                [self.matchingList addObject:[NSString stringWithFormat:@"%ld %ld", row-1, col]];
+                [self checkMatchWithRow:row-1 :col];
+            }
+        }
     }
     if(row != MAIN_MAX_ROW-1){
-        if([self.mainAreaPositions[row+1][col] isEqualToString:currentPuyo]
-           && ![exception isEqualToString:@"bottom"]){
-            NSLog(@"BOTTOM [%ld][%ld]", row+1, col);
-            [self.matchingList addObject:[NSString stringWithFormat:@"%ld %ld", row, col]];
-            [self.matchingList addObject:[NSString stringWithFormat:@"%ld %ld", row+1, col]];
-            [self checkMatchWithRow:row+1 :col exception:@"top"];
+        if([self.mainAreaPositions[row+1][col] isEqualToString:currentPuyo]){
+            //            NSLog(@"BOTTOM [%ld][%ld]", row+1, col);
+            if(![self.matchingList containsObject:[NSString stringWithFormat:@"%ld %ld", row+1, col]]){
+                [self.matchingList addObject:[NSString stringWithFormat:@"%ld %ld", row, col]];
+                [self.matchingList addObject:[NSString stringWithFormat:@"%ld %ld", row+1, col]];
+                [self checkMatchWithRow:row+1 :col];
+            }
         }
     }
     if(col != MAX_COL-1){
-        if([self.mainAreaPositions[row][col+1] isEqualToString:currentPuyo]
-           && ![exception isEqualToString:@"right"]){
-            NSLog(@"RIGHT [%ld][%ld]", row, col+1);
-            [self.matchingList addObject:[NSString stringWithFormat:@"%ld %ld", row, col]];
-            [self.matchingList addObject:[NSString stringWithFormat:@"%ld %ld", row, col+1]];
-            [self checkMatchWithRow:row :col+1 exception:@"left"];
+        if([self.mainAreaPositions[row][col+1] isEqualToString:currentPuyo]){
+            //            NSLog(@"RIGHT [%ld][%ld]", row, col+1);
+            if(![self.matchingList containsObject:[NSString stringWithFormat:@"%ld %ld", row, col+1]]){
+                [self.matchingList addObject:[NSString stringWithFormat:@"%ld %ld", row, col]];
+                [self.matchingList addObject:[NSString stringWithFormat:@"%ld %ld", row, col+1]];
+                [self checkMatchWithRow:row :col+1];
+            }
         }
     }
     if(col != 0){
-        if([self.mainAreaPositions[row][col-1] isEqualToString:currentPuyo]
-           && ![exception isEqualToString:@"left"]){
-            NSLog(@"LEFT [%ld][%ld]", row, col-1);
-            [self.matchingList addObject:[NSString stringWithFormat:@"%ld %ld", row, col]];
-            [self.matchingList addObject:[NSString stringWithFormat:@"%ld %ld", row, col-1]];
-            [self checkMatchWithRow:row :col-1 exception:@"right"];
+        if([self.mainAreaPositions[row][col-1] isEqualToString:currentPuyo]){
+            //            NSLog(@"LEFT [%ld][%ld]", row, col-1);
+            if(![self.matchingList containsObject:[NSString stringWithFormat:@"%ld %ld", row, col-1]]){
+                [self.matchingList addObject:[NSString stringWithFormat:@"%ld %ld", row, col]];
+                [self.matchingList addObject:[NSString stringWithFormat:@"%ld %ld", row, col-1]];
+                [self checkMatchWithRow:row :col-1];
+            }
         }
     }
 }
@@ -283,6 +285,9 @@ NSString *const empty = @"▫️";
 - (void) removeMatch {
     for(NSMutableSet *set in self.allMatchingList){
         NSArray *placeArray = [NSArray array];
+        //        for(NSString *place in set){
+        //            NSLog(@"matching %@",place);
+        //        }
         NSInteger row, col;
         NSArray* matchArr = [set allObjects];
         if(matchArr.count >= MIN_MATCH){
@@ -294,7 +299,7 @@ NSString *const empty = @"▫️";
             }
         }
     }
-    [NSThread sleepForTimeInterval:2];
+    [NSThread sleepForTimeInterval:1];
 }
 
 //MARK: sets
@@ -305,10 +310,10 @@ NSString *const empty = @"▫️";
     self.nxtPuyo1 = [Puyo new];
     self.nxtPuyo2 = [Puyo new];
     //For test
-    [_curPuyo1 setColor:@"❤️"];
-    [_curPuyo2 setColor:@"💛"];
-    [_nxtPuyo1 setColor:@"❤️"];
-    [_nxtPuyo2 setColor:@"💛"];
+    //    [_curPuyo1 setColor:@"❤️"];
+    //    [_curPuyo2 setColor:@"💛"];
+    //    [_nxtPuyo1 setColor:@"❤️"];
+    //    [_nxtPuyo2 setColor:@"💛"];
     [self placeSelectAreaPuyo];
     
 }
@@ -352,6 +357,16 @@ NSString *const empty = @"▫️";
     self.selectAreaPositions[x][y] = empty;
 }
 
+- (void) gameOver {
+    for(int row = 0; row < MAIN_MAX_ROW; row++){
+        for(int col = 0; col < MAX_COL; col++){
+            if(![self.mainAreaPositions[row][col] isEqualToString:empty]){
+                self.mainAreaPositions[row][col] = @"🖤";
+            }
+        }
+    }
+    [self displayCondition];
+}
 
 //MARK:display
 - (void) displayCondition {
