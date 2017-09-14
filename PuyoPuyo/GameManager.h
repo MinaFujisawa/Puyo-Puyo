@@ -22,7 +22,9 @@
 @property NSMutableArray* selectAreaPositions;
 @property NSMutableArray* mainAreaPositions;
 @property NSMutableSet *matchingList;
+@property NSMutableArray *floatingList;
 @property NSMutableArray *allMatchingList;
+@property NSMutableArray *heapTops;
 - (void) move : (NSString*) command;
 - (void) displayCondition;
 - (BOOL) isGameOver;
