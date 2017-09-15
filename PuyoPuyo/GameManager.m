@@ -116,7 +116,7 @@ NSString *const empty = @"▫️";
                 [self displayCondition];
                 [self dropFroatingPuyo];
             }
-        } while(self.floatingList.count != 0);
+        } while(self.floatingList.count != 0 && ![self isGameOver]);
         
         [self newTern];
         [self displayCondition];
@@ -224,7 +224,7 @@ NSString *const empty = @"▫️";
     //Check heap
     for(int col = 0; col < MAX_COL; col++){
         NSInteger count = 0;
-        for(int row = MAIN_MAX_ROW-1; row >= 0; row--){
+        for(int row = MAIN_MAX_ROW-1; row > 0; row--){
             if(![self.mainAreaPositions[MAIN_MAX_ROW-1][col] isEqualToString:empty]
                && ![self.mainAreaPositions[row][col] isEqualToString:empty]){
                 count += 1;
@@ -335,6 +335,7 @@ NSString *const empty = @"▫️";
 //        [_nxtPuyo1 setColor:@"❤️"];
 //        [_nxtPuyo2 setColor:@"💛"];
     [self placeSelectAreaPuyo];
+    sk.comboNum = 1;
 }
 
 - (BOOL) isGameOver {
@@ -401,6 +402,7 @@ NSString *const empty = @"▫️";
 - (void) displayNext {
     printf("NEXT : %s%s", [self.nxtPuyo1.color UTF8String], [self.nxtPuyo2.color UTF8String]);
 }
+
 
 - (void) displayArray : (NSInteger) areaType {
     NSMutableArray *array;

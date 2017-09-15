@@ -13,4 +13,6 @@
 @property (nonatomic) NSArray* colorList;
 @property (nonatomic) NSString* color;
 @property (nonatomic) NSString* currentPlace;
+@property (nonatomic)int maxPuyoColorVariety;
+
 @end

@@ -15,8 +15,8 @@ int main(int argc, const char * argv[]) {
     @autoreleasepool {
         
         GameManager* gm = [GameManager new];
-        ScoreKeeper* sk = [ScoreKeeper new];
-//        NSTimer *timer = gm.getTimer;
+        NSLog(@"\n❤️💛PUYO PUYO💚💙\n");
+        
         
         NSLog(@"\n◆Command | J - Left | K - Right | L - Rotate | D - Drop\n");
         [gm displayCondition];
@@ -33,10 +33,9 @@ int main(int argc, const char * argv[]) {
             }else{
                 printf("not valid");
             }
-            
-//            [gm displayCondition];
         }
         [gm gameOver];
+        
     }
     
     return 0;

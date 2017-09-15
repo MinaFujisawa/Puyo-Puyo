@@ -19,6 +19,7 @@
 @property Puyo* curPuyo2;
 @property Puyo* nxtPuyo1;
 @property Puyo* nxtPuyo2;
+@property int maxPuyoColorVariety;
 @property NSMutableArray* selectAreaPositions;
 @property NSMutableArray* mainAreaPositions;
 @property NSMutableSet *matchingList;

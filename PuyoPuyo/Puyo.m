@@ -7,20 +7,21 @@
 //
 
 #import "Puyo.h"
+#import "GameManager.h"
 
 
 
 @implementation Puyo
-
 - (instancetype)init
 {
     self = [super init];
     if (self) {
         _colorList = [NSArray arrayWithObjects:@"❤️", @"💛", @"💚",@"💙", @"💜", nil];
-        NSUInteger num = arc4random_uniform(3);
+        NSUInteger num = arc4random_uniform(5);
         _color = [_colorList objectAtIndex:num];
     }
     return self;
 }
+
 
 @end
