@@ -8,9 +8,10 @@
 
 #import "GameManager.h"
 #import "Puyo.h"
+#import "ScoreKeeper.h"
 
 @interface GameManager() {
-    
+    ScoreKeeper *sk;
 }
 
 @end
@@ -28,16 +29,17 @@ NSString *const empty = @"▫️";
     self = [super init];
     if (self) {
         _allMatchingList = [NSMutableArray array];
+        sk = [ScoreKeeper new];
         _curPuyo1 = [Puyo new];
         _curPuyo2 = [Puyo new];
         _nxtPuyo1 = [Puyo new];
         _nxtPuyo2 = [Puyo new];
         
         //For test
-        //        [_curPuyo1 setColor:@"❤️"];
-        //        [_curPuyo2 setColor:@"💛"];
-        //        [_nxtPuyo1 setColor:@"❤️"];
-        //        [_nxtPuyo2 setColor:@"💛"];
+//                [_curPuyo1 setColor:@"❤️"];
+//                [_curPuyo2 setColor:@"💛"];
+//                [_nxtPuyo1 setColor:@"❤️"];
+//                [_nxtPuyo2 setColor:@"💛"];
         
         //set first Puyos to selectAreaPositions
         _selectAreaPositions = [NSMutableArray array];
@@ -72,6 +74,7 @@ NSString *const empty = @"▫️";
         self.selectAreaPositions[p2row][p2col + 1] = [NSString stringWithFormat:@"%@", self.curPuyo2.color];
         [self.curPuyo1 setCurrentPlace:[NSString stringWithFormat:@"%ld %ld", p1row, p1col + 1]];
         [self.curPuyo2 setCurrentPlace:[NSString stringWithFormat:@"%ld %ld", p2row, p2col + 1]];
+        [self displayCondition];
         
     } else if ([command isEqualToString:@"left"] && p1col != 0 && p2col != 0){
         [self removePuyoFromSelectArea:p1row :p1col];
@@ -80,9 +83,11 @@ NSString *const empty = @"▫️";
         self.selectAreaPositions[p2row][p2col - 1] = [NSString stringWithFormat:@"%@", self.curPuyo2.color];
         [self.curPuyo1 setCurrentPlace:[NSString stringWithFormat:@"%ld %ld", p1row, p1col - 1]];
         [self.curPuyo2 setCurrentPlace:[NSString stringWithFormat:@"%ld %ld", p2row, p2col - 1]];
+        [self displayCondition];
         
     } else if ([command isEqualToString:@"rotate"]){
         [self rotate:p1row :p1col :p2row :p2col];
+        [self displayCondition];
     }
     
     //MARK: Drop
@@ -95,8 +100,10 @@ NSString *const empty = @"▫️";
                 if(set.count >= MIN_MATCH){
                     [self displayCondition];
                     [self removeMatch];
-                    [self.allMatchingList removeAllObjects];
-                    [self.matchingList removeAllObjects];
+                    
+                    [sk displayGotScore];
+                    [sk displayTotalScore];
+                    [sk resetNums];
                     break;
                 }
             }
@@ -104,12 +111,17 @@ NSString *const empty = @"▫️";
             //for combo
             [self findFloatingPuyo];
             if(self.floatingList.count > 0){
+                sk.comboNum += 1;
+                [sk resetNums];
                 [self displayCondition];
                 [self dropFroatingPuyo];
             }
         } while(self.floatingList.count != 0);
         
         [self newTern];
+        [self displayCondition];
+        [sk displayTotalScore];
+        
     }
 }
 
@@ -193,7 +205,6 @@ NSString *const empty = @"▫️";
         for(newRow = MAIN_MAX_ROW-1; newRow >= 0; newRow--){
             if([self.mainAreaPositions[newRow][col] isEqualToString:empty]){
                 self.mainAreaPositions[newRow][col] = self.mainAreaPositions[row][col];
-                
                 self.matchingList = [NSMutableSet set];
                 self.mainAreaPositions[row][col] = empty;
                 [self checkMatchWithRow:newRow :col];
@@ -213,7 +224,7 @@ NSString *const empty = @"▫️";
     //Check heap
     for(int col = 0; col < MAX_COL; col++){
         NSInteger count = 0;
-        for(int row = MAIN_MAX_ROW-1; row > 0; row--){
+        for(int row = MAIN_MAX_ROW-1; row >= 0; row--){
             if(![self.mainAreaPositions[MAIN_MAX_ROW-1][col] isEqualToString:empty]
                && ![self.mainAreaPositions[row][col] isEqualToString:empty]){
                 count += 1;
@@ -224,9 +235,9 @@ NSString *const empty = @"▫️";
     }
     
     //Check floating
-    for(int col = 0; col < MAX_COL-1; col++){
+    for(int col = 0; col < MAX_COL; col++){
         int max = MAIN_MAX_ROW - [self.heapTops[col] intValue] -1;
-        for(int row = max; row > 0; row--){
+        for(int row = max; row >= 0; row--){
             if(![self.mainAreaPositions[row][col] isEqualToString:empty]) {
                 [self.floatingList addObject: [NSString stringWithFormat:@"%d %d", row, col]];
             }
@@ -291,14 +302,23 @@ NSString *const empty = @"▫️";
         NSInteger row, col;
         NSArray* matchArr = [set allObjects];
         if(matchArr.count >= MIN_MATCH){
+            
+            NSInteger simulNum = 0;
             for (NSString* place in matchArr) {
                 placeArray = [place componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
                 row = [placeArray[0] integerValue];
                 col = [placeArray[1] integerValue];
-                self.mainAreaPositions[row][col] = empty;
+                if(![self.mainAreaPositions[row][col] isEqualToString:empty]){
+                    sk.puyoNum += 1;
+                    simulNum += 1;
+                    self.mainAreaPositions[row][col] = empty;
+                }
             }
+            [sk.simulNums addObject:[NSNumber numberWithInteger:simulNum]];
         }
     }
+    [self.allMatchingList removeAllObjects];
+    [self.matchingList removeAllObjects];
     [NSThread sleepForTimeInterval:1];
 }
 
@@ -310,12 +330,11 @@ NSString *const empty = @"▫️";
     self.nxtPuyo1 = [Puyo new];
     self.nxtPuyo2 = [Puyo new];
     //For test
-    //    [_curPuyo1 setColor:@"❤️"];
-    //    [_curPuyo2 setColor:@"💛"];
-    //    [_nxtPuyo1 setColor:@"❤️"];
-    //    [_nxtPuyo2 setColor:@"💛"];
+//        [_curPuyo1 setColor:@"❤️"];
+//        [_curPuyo2 setColor:@"💛"];
+//        [_nxtPuyo1 setColor:@"❤️"];
+//        [_nxtPuyo2 setColor:@"💛"];
     [self placeSelectAreaPuyo];
-    
 }
 
 - (BOOL) isGameOver {

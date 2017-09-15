@@ -9,11 +9,13 @@
 #import <Foundation/Foundation.h>
 #import "GameManager.h"
 #import "InputHandler.h"
+#import "ScoreKeeper.h"
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         
         GameManager* gm = [GameManager new];
+        ScoreKeeper* sk = [ScoreKeeper new];
 //        NSTimer *timer = gm.getTimer;
         
         NSLog(@"\n◆Command | J - Left | K - Right | L - Rotate | D - Drop\n");
@@ -32,11 +34,9 @@ int main(int argc, const char * argv[]) {
                 printf("not valid");
             }
             
-            [gm displayCondition];
+//            [gm displayCondition];
         }
         [gm gameOver];
-        
-        
     }
     
     return 0;

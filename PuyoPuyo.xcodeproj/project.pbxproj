@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0946ED1C1F675DF10053C269 /* InputHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 0946ED1B1F675DF10053C269 /* InputHandler.m */; };
+		095DDB391F6AE58100D2C3A7 /* ScoreKeeper.m in Sources */ = {isa = PBXBuildFile; fileRef = 095DDB381F6AE58100D2C3A7 /* ScoreKeeper.m */; };
 		096DB6921F6712CD001119AC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 096DB6911F6712CD001119AC /* main.m */; };
 		096DB69A1F6713F3001119AC /* Puyo.m in Sources */ = {isa = PBXBuildFile; fileRef = 096DB6991F6713F3001119AC /* Puyo.m */; };
 		09F81F0D1F6728960092E3A7 /* GameManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 09F81F0C1F6728960092E3A7 /* GameManager.m */; };
@@ -28,6 +29,8 @@
 /* Begin PBXFileReference section */
 		0946ED1A1F675DF10053C269 /* InputHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputHandler.h; sourceTree = "<group>"; };
 		0946ED1B1F675DF10053C269 /* InputHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InputHandler.m; sourceTree = "<group>"; };
+		095DDB371F6AE58100D2C3A7 /* ScoreKeeper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScoreKeeper.h; sourceTree = "<group>"; };
+		095DDB381F6AE58100D2C3A7 /* ScoreKeeper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScoreKeeper.m; sourceTree = "<group>"; };
 		096DB68E1F6712CD001119AC /* PuyoPuyo */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PuyoPuyo; sourceTree = BUILT_PRODUCTS_DIR; };
 		096DB6911F6712CD001119AC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		096DB6981F6713F3001119AC /* Puyo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Puyo.h; sourceTree = "<group>"; };
@@ -73,6 +76,8 @@
 				09F81F0C1F6728960092E3A7 /* GameManager.m */,
 				0946ED1A1F675DF10053C269 /* InputHandler.h */,
 				0946ED1B1F675DF10053C269 /* InputHandler.m */,
+				095DDB371F6AE58100D2C3A7 /* ScoreKeeper.h */,
+				095DDB381F6AE58100D2C3A7 /* ScoreKeeper.m */,
 			);
 			path = PuyoPuyo;
 			sourceTree = "<group>";
@@ -134,6 +139,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				095DDB391F6AE58100D2C3A7 /* ScoreKeeper.m in Sources */,
 				096DB69A1F6713F3001119AC /* Puyo.m in Sources */,
 				09F81F0D1F6728960092E3A7 /* GameManager.m in Sources */,
 				096DB6921F6712CD001119AC /* main.m in Sources */,

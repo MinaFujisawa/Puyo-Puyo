@@ -17,7 +17,7 @@
     self = [super init];
     if (self) {
         _colorList = [NSArray arrayWithObjects:@"❤️", @"💛", @"💚",@"💙", @"💜", nil];
-        NSUInteger num = arc4random_uniform(5);
+        NSUInteger num = arc4random_uniform(3);
         _color = [_colorList objectAtIndex:num];
     }
     return self;
