@@ -15,11 +15,11 @@
     self = [super init];
     if (self) {
         _simulNums = [NSMutableArray array];
-        _comboScoreList = [NSMutableDictionary dictionary];
-        _comboNum = 1;
-        [_comboScoreList setObject:[NSNumber numberWithInt:0] forKey:[NSNumber numberWithInt:1]];
+        _chainScoreList = [NSMutableDictionary dictionary];
+        _chainNum = 1;
+        [_chainScoreList setObject:[NSNumber numberWithInt:0] forKey:[NSNumber numberWithInt:1]];
         for(int i = 2; i < 9; i++){
-            [_comboScoreList setObject:[NSNumber numberWithInt:pow(2,i+1)] forKey:[NSNumber numberWithInt:i]];
+            [_chainScoreList setObject:[NSNumber numberWithInt:pow(2,i+1)] forKey:[NSNumber numberWithInt:i]];
         }
         
         _simulScoreList = [NSMutableDictionary dictionary];
@@ -41,10 +41,10 @@
 }
 
 - (NSInteger) getComboScore{
-    if(self.comboNum >= 9){
+    if(self.chainNum >= 9){
         return 999;
     } else{
-        return [[self.comboScoreList objectForKey:[NSNumber numberWithInteger:self.comboNum]] integerValue];
+        return [[self.chainScoreList objectForKey:[NSNumber numberWithInteger:self.chainNum]] integerValue];
     }
 }
 
@@ -68,7 +68,7 @@
 
 //MARK: display
 - (void) displayGotScore{
-    printf("%ld COMBO    ", (long)self.comboNum);
+    printf("%ld CHAIN    ", (long)self.chainNum);
     printf("got socre : %ld\n", [self getScore]);
 }
 

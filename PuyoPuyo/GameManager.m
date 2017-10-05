@@ -93,6 +93,7 @@ NSString *const empty = @"▫️";
     //MARK: Drop
     else if ([command isEqualToString:@"drop"]){
         [self dropPear:p1row :p1col :p2row :p2col];
+        [self setNewPuyo];
         
         do{
             //for remove match
@@ -111,14 +112,14 @@ NSString *const empty = @"▫️";
             //for combo
             [self findFloatingPuyo];
             if(self.floatingList.count > 0){
-                sk.comboNum += 1;
+                sk.chainNum += 1;
                 [sk resetNums];
                 [self displayCondition];
                 [self dropFroatingPuyo];
             }
         } while(self.floatingList.count != 0 && ![self isGameOver]);
         
-        [self newTern];
+        [self.allMatchingList removeAllObjects];
         [self displayCondition];
         [sk displayTotalScore];
         
@@ -323,8 +324,8 @@ NSString *const empty = @"▫️";
 }
 
 //MARK: sets
-- (void) newTern {
-    [self.allMatchingList removeAllObjects];
+- (void) setNewPuyo {
+    
     self.curPuyo1 = self.nxtPuyo1;
     self.curPuyo2 = self.nxtPuyo2;
     self.nxtPuyo1 = [Puyo new];
@@ -335,7 +336,7 @@ NSString *const empty = @"▫️";
 //        [_nxtPuyo1 setColor:@"❤️"];
 //        [_nxtPuyo2 setColor:@"💛"];
     [self placeSelectAreaPuyo];
-    sk.comboNum = 1;
+    sk.chainNum = 1;
 }
 
 - (BOOL) isGameOver {

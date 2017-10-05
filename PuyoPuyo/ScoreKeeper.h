@@ -10,10 +10,10 @@
 
 @interface ScoreKeeper : NSObject
 @property NSInteger puyoNum;
-@property NSInteger comboNum;
+@property NSInteger chainNum;
 @property NSMutableArray* simulNums;
 @property NSInteger totalScore;
-@property NSMutableDictionary *comboScoreList;
+@property NSMutableDictionary *chainScoreList;
 @property NSMutableDictionary *simulScoreList;
 - (void) displayGotScore;
 - (void) displayTotalScore;
