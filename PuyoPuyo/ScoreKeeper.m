@@ -16,7 +16,8 @@
     if (self) {
         _simulNums = [NSMutableArray array];
         _chainScoreList = [NSMutableDictionary dictionary];
-        _chainNum = 1;
+        _chainNum = 0;
+        _currentScore = 0;
         [_chainScoreList setObject:[NSNumber numberWithInt:0] forKey:[NSNumber numberWithInt:1]];
         for(int i = 2; i < 9; i++){
             [_chainScoreList setObject:[NSNumber numberWithInt:pow(2,i+1)] forKey:[NSNumber numberWithInt:i]];
@@ -30,13 +31,13 @@
     return self;
 }
 
-- (NSInteger) getScore {
+- (void) getScore {
     if([self getComboScore] == 0 && [self getSimulScore] == 0){
-        NSLog(@"%ld x 10 x 1", self.puyoNum);
-        return self.puyoNum * 10 * 1;
+        printf("%ld x 10 x 1", self.puyoNum);
+        self.currentScore = self.puyoNum * 10 * 1;
     }else{
-        NSLog(@"%ld x 10 x (%ld + %ld)", self.puyoNum, [self getComboScore], [self getSimulScore]);
-        return self.puyoNum * 10 * ([self getComboScore] + [self getSimulScore]);
+        printf("%ld x 10 x (%ld + %ld)", self.puyoNum, [self getComboScore], [self getSimulScore]);
+        self.currentScore = self.puyoNum * 10 * ([self getComboScore] + [self getSimulScore]);
     }
 }
 
@@ -69,11 +70,12 @@
 //MARK: display
 - (void) displayGotScore{
     printf("%ld CHAIN    ", (long)self.chainNum);
-    printf("got socre : %ld\n", [self getScore]);
+    [self getScore];
+    printf(" = %ld\n", self.currentScore);
 }
 
 - (void) displayTotalScore{
-    self.totalScore += [self getScore];
+    self.totalScore += self.currentScore;
     printf("TOTAL:%ld\n", (long)self.totalScore);
 }
 

@@ -12,6 +12,7 @@
 @property NSInteger puyoNum;
 @property NSInteger chainNum;
 @property NSMutableArray* simulNums;
+@property NSInteger currentScore;
 @property NSInteger totalScore;
 @property NSMutableDictionary *chainScoreList;
 @property NSMutableDictionary *simulScoreList;

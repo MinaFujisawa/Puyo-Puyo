@@ -36,10 +36,10 @@ NSString *const empty = @"▫️";
         _nxtPuyo2 = [Puyo new];
         
         //For test
-//                [_curPuyo1 setColor:@"❤️"];
-//                [_curPuyo2 setColor:@"💛"];
-//                [_nxtPuyo1 setColor:@"❤️"];
-//                [_nxtPuyo2 setColor:@"💛"];
+//        [_curPuyo1 setColor:@"❤️"];
+//        [_curPuyo2 setColor:@"💛"];
+//        [_nxtPuyo1 setColor:@"❤️"];
+//        [_nxtPuyo2 setColor:@"💛"];
         
         //set first Puyos to selectAreaPositions
         _selectAreaPositions = [NSMutableArray array];
@@ -92,6 +92,7 @@ NSString *const empty = @"▫️";
     
     //MARK: Drop
     else if ([command isEqualToString:@"drop"]){
+        
         [self dropPear:p1row :p1col :p2row :p2col];
         [self setNewPuyo];
         
@@ -99,16 +100,16 @@ NSString *const empty = @"▫️";
             //for remove match
             for(NSMutableSet *set in self.allMatchingList){
                 if(set.count >= MIN_MATCH){
+                    if (sk.chainNum == 0) sk.chainNum = 1;
                     [self displayCondition];
                     [self removeMatch];
-                    
+                    //Display score
                     [sk displayGotScore];
                     [sk displayTotalScore];
                     [sk resetNums];
                     break;
                 }
             }
-            
             //for combo
             [self findFloatingPuyo];
             if(self.floatingList.count > 0){
@@ -119,10 +120,11 @@ NSString *const empty = @"▫️";
             }
         } while(self.floatingList.count != 0 && ![self isGameOver]);
         
+        //Reset
+        sk.chainNum = 0;
         [self.allMatchingList removeAllObjects];
         [self displayCondition];
         [sk displayTotalScore];
-        
     }
 }
 
@@ -318,6 +320,7 @@ NSString *const empty = @"▫️";
             [sk.simulNums addObject:[NSNumber numberWithInteger:simulNum]];
         }
     }
+    
     [self.allMatchingList removeAllObjects];
     [self.matchingList removeAllObjects];
     [NSThread sleepForTimeInterval:1];
@@ -331,12 +334,12 @@ NSString *const empty = @"▫️";
     self.nxtPuyo1 = [Puyo new];
     self.nxtPuyo2 = [Puyo new];
     //For test
-//        [_curPuyo1 setColor:@"❤️"];
-//        [_curPuyo2 setColor:@"💛"];
-//        [_nxtPuyo1 setColor:@"❤️"];
-//        [_nxtPuyo2 setColor:@"💛"];
+//    [_curPuyo1 setColor:@"❤️"];
+//    [_curPuyo2 setColor:@"💛"];
+//    [_nxtPuyo1 setColor:@"❤️"];
+//    [_nxtPuyo2 setColor:@"💛"];
     [self placeSelectAreaPuyo];
-    sk.chainNum = 1;
+    
 }
 
 - (BOOL) isGameOver {
