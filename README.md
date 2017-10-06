@@ -1,4 +1,5 @@
 # Puyo Puyo
+Language : Objective-C
 
 # What is Puyo Puyo?
 Puyo Puyo is a series of tile-matching video games.
@@ -10,9 +11,9 @@ In my game, user can decide the position first, then drop them.
 
 ![drop](https://github.com/MinaFujisawa/PuyoPuyo/blob/master/screenshots/drop.png)
 
-When four or more Puyo of the same color line up adjacent to each other, they disappear. Puyo connect horizontally or vertically. This is called Popping.
+When four or more Puyo of the same color line up adjacent to each other, they disappear. Puyo connect horizontally or vertically. This is called __Popping__.
 
-A Chain is made when falling Puyo cause a new group of Puyo to Pop, making a chain reaction.
+A Chain is made when falling Puyo cause a new group of Puyo to Pop, making a __chain reaction__.
 ![drop](https://github.com/MinaFujisawa/PuyoPuyo/blob/master/screenshots/chain.png)
 
 Ref:
