@@ -3,7 +3,7 @@
 # What is Puyo Puyo?
 Puyo Puyo is a series of tile-matching video games.
 
-#Rule
+# Rule
 Puyo(in my app : 💙) fall from the top of the screen in pairs.
 The piece can be moved,rotated and dropped by prompting the user. The piece falls until it reaches another Puyo or the bottom of the screen.
 In my game, user can decide the position first, then drop them.
@@ -18,7 +18,7 @@ A Chain is made when falling Puyo cause a new group of Puyo to Pop, making a cha
 Ref:
 https://en.wikipedia.org/wiki/Puyo_Puyo#Gameplay
 
-#Scoring
+# Scoring
 The scoring is based on the formula, which consists of follows:
 - Number of puyo cleared in the chain
 - How many puyo are in the group
