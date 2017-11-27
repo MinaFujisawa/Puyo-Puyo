@@ -2,7 +2,7 @@
 Language : Objective-C
 
 # What is Puyo Puyo?
-Puyo Puyo is a series of tile-matching video games.
+Puyo Puyo is a series of tile-matching video games. I made my own command line version of the game.
 
 # Rule
 Puyo(in my app : 💙) fall from the top of the screen in pairs.
